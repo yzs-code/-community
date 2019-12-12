@@ -1,4 +1,4 @@
-package code.yzs.community.community;
+package code.yzs.community;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
