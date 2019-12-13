@@ -5,9 +5,14 @@ import code.yzs.community.dto.GIthubUser;
 import code.yzs.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author yangzhenshan
@@ -18,23 +23,40 @@ public class AuthorizeController {
 
     @Autowired
     private GithubProvider githubProvider;
+    @Value("${github.client.id}")
+    private  String clientid;
+    @Value("${github.client.secret}")
+    private  String clientsecret;
+    @Value("${github.redirect.url}")
+    private  String redirectUrl;
+
+
 
 
     @RequestMapping("/callback")
-    public String  callback(@RequestParam(name="code") String  code, @RequestParam(name="state") String  state ){
+    public String  callback(@RequestParam(name="code") String  code, HttpServletRequest request,
+                            @RequestParam(name="state") String  state, Model model){
         AccessTokenDTO accessTokenDTO= new AccessTokenDTO();
-        accessTokenDTO.setClient_id("bc09130e5c7da6b7fa08");
-        accessTokenDTO.setClient_secret("c7316d90b777377f07f4941ebd27a21d739ba8c6");
+        accessTokenDTO.setClient_id(clientid);
+        accessTokenDTO.setClient_secret(clientsecret);
         accessTokenDTO.setCode(code);
         accessTokenDTO.setState(state);
-        accessTokenDTO.setRedirect_uri("http://localhost:8087/callback");
+        accessTokenDTO.setRedirect_uri(redirectUrl);
         //获取token
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         //返回GIthubUser对象
         GIthubUser user = githubProvider.getuser(accessToken);
         //将信息传递给首页
+        model.addAttribute("user",user);
+        if(user!=null){
+             //登录成功
+            request.getSession().setAttribute("user",user);
+            return  "redirect:/";
+        }else {
+            //登录失败
 
-        return "index";
+            return  "redirect:/";
+        }
     }
 
 
