@@ -2,6 +2,8 @@ package code.yzs.community.controller;
 
 import code.yzs.community.dto.AccessTokenDTO;
 import code.yzs.community.dto.GIthubUser;
+import code.yzs.community.mapper.UserMapper;
+import code.yzs.community.model.User;
 import code.yzs.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 /**
  * @author yangzhenshan
@@ -29,13 +33,15 @@ public class AuthorizeController {
     private  String clientsecret;
     @Value("${github.redirect.url}")
     private  String redirectUrl;
-
+    @Autowired
+    private UserMapper userMapper;
 
 
 
     @RequestMapping("/callback")
-    public String  callback(@RequestParam(name="code") String  code, HttpServletRequest request,
-                            @RequestParam(name="state") String  state, Model model){
+    public String  callback(@RequestParam(name="code") String  code,
+                            @RequestParam(name="state") String  state, Model model, HttpServletRequest request,
+                            HttpServletResponse response){
         AccessTokenDTO accessTokenDTO= new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientid);
         accessTokenDTO.setClient_secret(clientsecret);
@@ -45,12 +51,22 @@ public class AuthorizeController {
         //获取token
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         //返回GIthubUser对象
-        GIthubUser user = githubProvider.getuser(accessToken);
+        GIthubUser gIthubUser = githubProvider.getuser(accessToken);
         //将信息传递给首页
-        model.addAttribute("user",user);
-        if(user!=null){
+        model.addAttribute("user",gIthubUser);
+        if(gIthubUser!=null){
+
+            User user = new User();
+            user.setToken(UUID.randomUUID().toString());
+            user.setName(gIthubUser.getName());
+            user.setGmtCreat(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreat());
+            user.getAccountId(String.valueOf(gIthubUser.getId()));
+            userMapper.insert(user);
              //登录成功
-            request.getSession().setAttribute("user",user);
+            request.getSession().setAttribute("user",gIthubUser);
+
+
             return  "redirect:/";
         }else {
             //登录失败
