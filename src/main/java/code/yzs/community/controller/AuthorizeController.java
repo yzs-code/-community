@@ -55,25 +55,19 @@ public class AuthorizeController {
         //将信息传递给首页
         model.addAttribute("user",gIthubUser);
         if(gIthubUser!=null){
-
             User user = new User();
             user.setToken(UUID.randomUUID().toString());
             user.setName(gIthubUser.getName());
             user.setGmtCreat(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreat());
-            user.getAccountId(String.valueOf(gIthubUser.getId()));
+            user.setAccountId(gIthubUser.getId());
             userMapper.insert(user);
              //登录成功
             request.getSession().setAttribute("user",gIthubUser);
-
-
             return  "redirect:/";
         }else {
             //登录失败
-
             return  "redirect:/";
         }
     }
-
-
 }
