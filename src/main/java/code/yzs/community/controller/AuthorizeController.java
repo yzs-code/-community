@@ -5,16 +5,14 @@ import code.yzs.community.dto.GIthubUser;
 import code.yzs.community.mapper.UserMapper;
 import code.yzs.community.model.User;
 import code.yzs.community.provider.GithubProvider;
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -37,10 +35,9 @@ public class AuthorizeController {
     private UserMapper userMapper;
 
 
-
     @RequestMapping("/callback")
     public String  callback(@RequestParam(name="code") String  code,
-                            @RequestParam(name="state") String  state, Model model, HttpServletRequest request,
+                            @RequestParam(name="state") String  state, Model model,
                             HttpServletResponse response){
         AccessTokenDTO accessTokenDTO= new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientid);
@@ -48,7 +45,7 @@ public class AuthorizeController {
         accessTokenDTO.setCode(code);
         accessTokenDTO.setState(state);
         accessTokenDTO.setRedirect_uri(redirectUrl);
-        //获取token
+        //获取accessToken
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         //返回GIthubUser对象
         GIthubUser gIthubUser = githubProvider.getuser(accessToken);
@@ -56,14 +53,16 @@ public class AuthorizeController {
         model.addAttribute("user",gIthubUser);
         if(gIthubUser!=null){
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setName(gIthubUser.getName());
             user.setGmtCreat(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreat());
             user.setAccountId(gIthubUser.getId());
             userMapper.insert(user);
              //登录成功
-            request.getSession().setAttribute("user",gIthubUser);
+            Cookie cookie = new Cookie("token",token);
+            response.addCookie(cookie);
             return  "redirect:/";
         }else {
             //登录失败

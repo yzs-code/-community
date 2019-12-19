@@ -3,6 +3,8 @@ package code.yzs.community.mapper;
 import code.yzs.community.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * @author yangzhenshan
@@ -14,5 +16,6 @@ public interface UserMapper {
             "(#{accountId},#{name},#{token},#{gmtCreat},#{gmtModified})")
     void  insert(User user);
 
-
+    @Select("select * from user where token=#{token}")
+    User findByToken(@Param("token") String token);
 }
