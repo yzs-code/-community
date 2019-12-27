@@ -4,6 +4,7 @@ package code.yzs.community.provider;
 import code.yzs.community.dto.AccessTokenDTO;
 import code.yzs.community.dto.GIthubUser;
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +13,10 @@ import java.io.IOException;
 /**
  * @author yangzhenshan
  * @date 2019/12/11-16:40
+ * @deprecated 获取github登录
  */
 @Component
+@Slf4j
 public class GithubProvider {
    public  String  getAccessToken(AccessTokenDTO accessTokenDTO){
        MediaType mediaType = MediaType.get("application/json; charset=utf-8");
@@ -29,6 +32,7 @@ public class GithubProvider {
            System.out.println(token);
            return token;
        }catch (Exception e){
+           e.printStackTrace();
        }
        return  null;
    }
@@ -49,8 +53,6 @@ public class GithubProvider {
 
         return  null;
    }
-
-
 
 
 }

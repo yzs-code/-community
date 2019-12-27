@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>阿三的奇妙冒险</title>
+    <title>发布</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-theme.css"/>
-    <script src="js/bootstrap.min.js"  type="application/javascript"></script>
     <link rel="stylesheet" href="css/community.css">
+    <script src="js/bootstrap.min.js"  type="application/javascript"></script>
 
 </head>
 <body>
@@ -15,7 +15,6 @@
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">阿三的奇妙冒险</span>
-
             </button>
             <a class="navbar-brand" href="/">阿三的奇妙冒险</a>
         </div>
@@ -41,35 +40,39 @@
                     </ul>
                 </li>
                 <li  th:if="${session.user==null}">
-                    <a href="https://github.com/login/oauth/authorize?client_id=bc09130e5c7da6b7fa08&redirect_uri=http://localhost:8087/callback&scope=user&state=1">登录</a></li>
-
+                    <a href="https://github.com/login/oauth/authorize?client_id=bc09130e5c7da6b7fa08&redirect_uri=http://localhost:8087/callback&scope=user&state=1">登录</a>
+                </li>
             </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+        </div>
+    </div>
 </nav>
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
-            <h2> <span class="glyphicon glyphicon-list" aria-hidden="true"></span>热门话题</h2>
+            <h2> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发起</h2>
             <hr/>
-            <div class="media">
-                <div class="media-left media-middle">
-                    <a href="#">
-                        <img class="media-object img-circle" src="https://avatars1.githubusercontent.com/u/58327192?v=4" >
-                    </a>
+            <form  action="/publish" method="post">
+                <div class="form-group">
+                    <label for="title">问题标题（简单扼要）:</label>
+                    <input type="text" class="form-control" id="title" th:value="${title}" name="title" placeholder="问题标题……">
                 </div>
-                <div class="media-body">
-                    <h4 class="media-heading">阿三社区</h4>
-                    欢迎大家来看<br>
-                    <span class="text-desc">0 个回复 • 2 次浏览 • 2019-12-26 20:26</span>
+                <div class="form-group">
+                    <label for="description">问题补充 (必填，请参照右侧提示):</label>
+                    <textarea class="form-control" name="description" id="description"  th:value="${description}" cols="30" rows="10"> </textarea>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="tag">添加标签</label>
+                    <input type="text" class="form-control" id="tag" name="tag"  th:value="${tag}"  placeholder="输入标签，已，号分隔开">
+                </div>
+                <span class="alert alert-danger" role="alert" th:text="${error}" th:if="${error!=null}"></span>
+                <button type="submit" class="btn btn-success btn-publish">发布</button>
+            </form>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
-            <h3>问题发起指南</h3>
-            • 问题标题: 请用精简的语言描述您发布的问题，不超过25字<br>
-            • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>
-            • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字<br>
+        <h3>问题发起指南</h3>
+        • 问题标题: 请用精简的语言描述您发布的问题，不超过25字<br>
+        • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>
+        • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字<br>
         </div>
     </div>
 </div>

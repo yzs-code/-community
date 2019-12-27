@@ -51,14 +51,15 @@ public class AuthorizeController {
         GIthubUser gIthubUser = githubProvider.getuser(accessToken);
         //将信息传递给首页
         model.addAttribute("user",gIthubUser);
-        if(gIthubUser!=null){
+        if(gIthubUser!=null&&gIthubUser.getId()!=null){
             User user = new User();
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(gIthubUser.getName());
-            user.setGmtCreat(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreat());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
             user.setAccountId(gIthubUser.getId());
+            user.setAvatarUrl(gIthubUser.getAvatarUrl());
             userMapper.insert(user);
              //登录成功
             Cookie cookie = new Cookie("token",token);
@@ -67,6 +68,7 @@ public class AuthorizeController {
         }else {
             //登录失败
             return  "redirect:/";
+
         }
     }
 }
