@@ -20,7 +20,7 @@ public interface UserMapper {
     User findByToken(@Param("token") String token);
 
     //根据id查找
-    @Select("select * from USER where account_Id=#{account_Id}  ")
+    @Select("select * from USER where account_Id=#{account_Id} order by gmt_Create desc limit 1 ")
     User findById(@Param("account_Id") String account_Id);
 
 

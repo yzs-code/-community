@@ -71,12 +71,13 @@ public class publishController {
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
+        System.out.println(user.toString());
         question.setCreator(Long.valueOf(user.getAccountId()));
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(System.currentTimeMillis());
+        question.setViewCount(0);
+        question.setCommentCount(0);
         questionMapper.create(question);
         return  "redirect:/";
     }
-
-
 }

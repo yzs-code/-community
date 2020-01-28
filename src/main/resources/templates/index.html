@@ -52,16 +52,17 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
             <h2> <span class="glyphicon glyphicon-list" aria-hidden="true"></span>热门话题</h2>
             <hr/>
-            <div class="media">
+            <div class="media" th:each="qusetion:${questionDTOList}">
                 <div class="media-left media-middle">
                     <a href="#">
-                        <img class="media-object img-circle" src="https://avatars1.githubusercontent.com/u/58327192?v=4" >
+                        <img class="media-object img-circle" th:src="${qusetion.user.avatarUrl}" >
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading">阿三社区</h4>
-                    欢迎大家来看<br>
-                    <span class="text-desc">0 个回复 • 2 次浏览 • 2019-12-26 20:26</span>
+                    <h4 class="media-heading" th:text="${qusetion.title}"></h4>
+                    <span th:text="${qusetion.description}"></span><br>
+                    <span class="text-desc"  th:text="${qusetion.commentCount}"></span>次回复·
+                    <span class="text-desc"  th:text="${qusetion.viewCount}"></span>次浏览·发布时间·<span  th:text="${#dates.format(qusetion.gmtCreate, 'yyyy/MM/dd/ HH:mm')}"></span>
                 </div>
             </div>
         </div>

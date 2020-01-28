@@ -1,6 +1,9 @@
 package code.yzs.community.model;
 
 import lombok.Data;
+import lombok.Value;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 /**
  * @author yangzhenshan

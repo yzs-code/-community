@@ -19,5 +19,5 @@ public interface QuestionMapper {
     public void create(Question question);
     //查询问题
     @Select("select * from question")
-    public List<Question> List();
+    public List<Question> List(Integer offset, Integer size);
 }

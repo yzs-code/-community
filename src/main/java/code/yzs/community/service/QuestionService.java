@@ -24,9 +24,11 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public List<QuestionDTO> list(){
+    public List<QuestionDTO> list(Integer page, Integer size){
+        Integer offset=size*(page-1);
+
         List<QuestionDTO> list=new ArrayList<QuestionDTO>();
-        List<Question> questions=questionMapper.List();
+        List<Question> questions=questionMapper.List(offset,size);
         for (Question question : questions) {
             QuestionDTO questionDTO=new QuestionDTO();
             User user =userMapper.findById(question.getCreator().toString());
@@ -34,7 +36,6 @@ public class QuestionService {
             BeanUtils.copyProperties(question,questionDTO);//copyquestion 到questionDTO里去
             list.add(questionDTO);
         }
-
         return list;
     }
 
